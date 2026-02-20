@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AccessiBuild - Accessible Venue Finder</title>
+<meta name="description" content="Find, rate, and review venues based on real accessibility features.">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#faf8f5;--fg:#1a1e2e;--card:#fff;--primary:#1a8a8a;--primary-fg:#fff;
+  --secondary:#f0ebe2;--secondary-fg:#2a2e3e;--muted:#ede8df;--muted-fg:#6b7280;
+  --accent:#e6a317;--accent-fg:#1a1e2e;--border:#dde0e6;--radius:0.75rem;
+  --mobility:#3b82f6;--sensory:#8b5cf6;--visual:#e6a317;
+  --shadow:0 2px 12px rgba(26,30,46,0.06);--shadow-hover:0 8px 30px rgba(26,30,46,0.12);
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+/* NAV */
+.nav{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{font-size:1.25rem;font-weight:800;color:var(--primary)}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{font-size:.875rem;font-weight:500;color:var(--muted-fg);transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--primary)}
+.hamburger{display:none;background:none;font-size:1.5rem;color:var(--fg)}
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--fg) 0%,#2a3a4a 100%);color:#fff;padding:5rem 1.5rem}
+.hero-inner{max-width:1200px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(26,138,138,.3);padding:.375rem 1rem;border-radius:2rem;font-size:.875rem;font-weight:500;margin-bottom:1rem}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.15;margin-bottom:1.5rem;max-width:600px}
+.hero h1 span{color:var(--accent);display:block}
+.hero p{font-size:1.125rem;opacity:.8;max-width:500px;margin-bottom:2rem;line-height:1.7}
+/* SEARCH */
+.search-box{display:flex;max-width:500px;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.search-box input{flex:1;padding:.875rem 1rem;border:none;outline:none;font-size:1rem;background:transparent}
+.search-box button{padding:.875rem 1.5rem;background:var(--primary);color:#fff;font-weight:600;font-size:.875rem;transition:background .2s}
+.search-box button:hover{background:#15736f}
+/* TAGS */
+.tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.tag{padding:.375rem .875rem;border-radius:2rem;font-size:.75rem;font-weight:600;color:#fff}
+.tag-mobility{background:var(--mobility)}
+.tag-sensory{background:var(--sensory)}
+.tag-visual{background:var(--visual)}
+/* STATS */
+.stats{border-bottom:1px solid var(--border);background:var(--card)}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;padding:3rem 1.5rem;text-align:center}
+.stat-val{font-size:1.75rem;font-weight:700;color:var(--fg)}
+.stat-label{font-size:.875rem;color:var(--muted-fg)}
+/* SECTION */
+.section{max-width:1200px;margin:0 auto;padding:5rem 1.5rem}
+.section-title{font-size:1.875rem;font-weight:700;margin-bottom:.5rem}
+.section-sub{color:var(--muted-fg);margin-bottom:2.5rem}
+.section-alt{background:rgba(240,235,226,.4)}
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem}
+.step{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;box-shadow:var(--shadow)}
+.step-num{width:48px;height:48px;border-radius:50%;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;margin-bottom:1rem}
+.step h3{font-size:1.125rem;font-weight:600;margin-bottom:.5rem}
+.step p{font-size:.875rem;color:var(--muted-fg);line-height:1.6}
+/* CARDS GRID */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .3s,transform .3s;cursor:pointer}
+.card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.card-img{width:100%;height:200px;object-fit:cover;background:var(--muted)}
+.card-body{padding:1.25rem}
+.card-cat{font-size:.75rem;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:.05em}
+.card-name{font-size:1.125rem;font-weight:700;margin:.25rem 0}
+.card-addr{font-size:.8125rem;color:var(--muted-fg);margin-bottom:.75rem}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.card-score{display:flex;align-items:center;gap:.25rem;font-weight:600;color:var(--accent)}
+.card-reviews{font-size:.8125rem;color:var(--muted-fg)}
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.feature{display:flex;gap:.75rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow)}
+.feature-icon{color:var(--primary);font-size:1.25rem;flex-shrink:0;margin-top:.125rem}
+.feature h3{font-size:1rem;font-weight:600;margin-bottom:.25rem}
+.feature p{font-size:.8125rem;color:var(--muted-fg);line-height:1.6}
+/* FILTERS */
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+.filter-btn{padding:.5rem 1rem;border-radius:var(--radius);font-size:.875rem;font-weight:500;background:var(--secondary);color:var(--secondary-fg);transition:all .2s}
+.filter-btn:hover{background:var(--muted)}
+.filter-btn.active{background:var(--fg);color:var(--bg)}
+.tag-filter{padding:.375rem .875rem;border-radius:2rem;font-size:.8125rem;font-weight:600;border:2px solid transparent;transition:all .2s}
+.tag-filter.active{border-color:currentColor;opacity:1}
+.tag-filter:not(.active){opacity:.5}
+.tag-filter-mobility{color:var(--mobility);background:rgba(59,130,246,.1)}
+.tag-filter-sensory{color:var(--sensory);background:rgba(139,92,246,.1)}
+.tag-filter-visual{color:var(--visual);background:rgba(230,163,23,.1)}
+/* DETAIL */
+.detail{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+.detail-img{width:100%;height:350px;object-fit:cover;border-radius:var(--radius);margin-bottom:2rem;background:var(--muted)}
+.detail-cat{font-size:.875rem;font-weight:600;color:var(--primary);text-transform:uppercase}
+.detail h1{font-size:2rem;font-weight:800;margin:.5rem 0}
+.detail-addr{color:var(--muted-fg);margin-bottom:1rem}
+.detail-score{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem}
+.detail-score .stars{color:var(--accent);font-size:1.25rem}
+.detail-score .num{font-size:1.5rem;font-weight:700}
+.detail-score .count{color:var(--muted-fg);font-size:.875rem}
+.detail-desc{line-height:1.8;margin-bottom:2rem;color:var(--fg)}
+.detail-features{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}
+.detail-feat{background:var(--secondary);padding:.375rem .875rem;border-radius:2rem;font-size:.8125rem;font-weight:500}
+.review{border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;background:var(--card)}
+.review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.review-user{font-weight:600}
+.review-date{font-size:.8125rem;color:var(--muted-fg)}
+.review-stars{color:var(--accent);margin-bottom:.5rem}
+.review-text{font-size:.9375rem;line-height:1.6;color:var(--fg)}
+.back-btn{display:inline-flex;align-items:center;gap:.5rem;color:var(--primary);font-weight:500;margin-bottom:1.5rem;font-size:.875rem}
+.back-btn:hover{text-decoration:underline}
+/* ABOUT */
+.about{max-width:800px;margin:0 auto;padding:3rem 1.5rem}
+.about h1{font-size:2rem;font-weight:800;margin-bottom:1rem}
+.about h2{font-size:1.25rem;font-weight:700;margin:2rem 0 .75rem;color:var(--primary)}
+.about p,.about li{font-size:.9375rem;line-height:1.8;color:var(--fg)}
+.about ul{padding-left:1.5rem;margin:.5rem 0}
+.about li{margin:.25rem 0}
+.req-badge{display:inline-block;background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:.125rem .5rem;border-radius:.25rem;margin-right:.5rem}
+/* FOOTER */
+.footer{background:var(--fg);color:rgba(255,255,255,.7);text-align:center;padding:2.5rem 1.5rem;font-size:.875rem}
+.footer strong{color:#fff}
+/* HIDDEN */
+.page{display:none}
+.page.active{display:block}
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:block}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--card);padding:1rem 1.5rem;border-bottom:1px solid var(--border);gap:.75rem}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:2rem}
+  .cards{grid-template-columns:1fr}
+  .detail-img{height:220px}
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="showPage('home')">Accessi<span>Build</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="#" class="active" onclick="showPage('home')" id="nav-home">Home</a>
+      <a href="#" onclick="showPage('venues')" id="nav-venues">Venues</a>
+      <a href="#" onclick="showPage('about')" id="nav-about">About</a>
+    </div>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">&#9776;</button>
+  </div>
+</nav>
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">&#9855; Discover Accessible Venues</div>
+      <h1>Every space should be <span>welcome to everyone.</span></h1>
+      <p>Find, rate, and review venues based on real accessibility features. Powered by our community of users who care about inclusion.</p>
+      <div class="search-box">
+        <input type="text" placeholder="Search venues, categories, locations..." id="heroSearch">
+        <button onclick="heroSearchGo()">Search</button>
+      </div>
+      <div class="tags">
+        <span class="tag tag-mobility">&#9855; Mobility</span>
+        <span class="tag tag-sensory">&#128066; Sensory</span>
+        <span class="tag tag-visual">&#128065; Visual</span>
+      </div>
+    </div>
+  </section>
+  <section class="stats">
+    <div class="stats-inner">
+      <div><div class="stat-val">500+</div><div class="stat-label">Venues Listed</div></div>
+      <div><div class="stat-val">4.5</div><div class="stat-label">Avg. Rating</div></div>
+      <div><div class="stat-val">2,000+</div><div class="stat-label">Community Reviews</div></div>
+      <div><div class="stat-val">3</div><div class="stat-label">Accessibility Tags</div></div>
+    </div>
+  </section>
+  <section class="section">
+    <div style="text-align:center;margin-bottom:2.5rem">
+      <h2 class="section-title">How AccessiBuild Works</h2>
+      <p class="section-sub">Three simple steps to find accessible venues near you</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3>Search &amp; Filter</h3><p>Search by name, category, or location. Filter by Mobility, Sensory, or Visual accessibility tags.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Read Reviews</h3><p>See real community ratings and detailed reviews from people with lived accessibility experience.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Rate &amp; Share</h3><p>Submit your own accessibility score, write reviews, and upload photos of accessibility features.</p></div>
+    </div>
+  </section>
+  <section class="section-alt">
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2rem">
+        <div>
+          <h2 class="section-title">Featured Venues</h2>
+          <p class="section-sub" style="margin-bottom:0">Top-rated accessible places in the community</p>
+        </div>
+        <a href="#" onclick="showPage('venues')" style="color:var(--primary);font-weight:500;font-size:.875rem">View all &rarr;</a>
+      </div>
+      <div class="cards" id="featuredCards"></div>
+    </div>
+  </section>
+  <section class="section">
+    <div style="text-align:center;margin-bottom:2.5rem">
+      <h2 class="section-title">Platform Features</h2>
+      <p class="section-sub">Built with accessibility and inclusion at its core</p>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Venue Discovery &amp; Search</h3><p>Search by name, category (Caf&eacute;, Library, Gym), or specific location with geolocation support.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Granular Accessibility Filtering</h3><p>Filter venues by Mobility, Sensory, and Visual accessibility tags to find exactly what you need.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Community Ratings &amp; Reviews</h3><p>1&ndash;5 star accessibility scores with detailed text reviews and specific accessibility tags.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Multimedia Evidence</h3><p>Upload photos of accessibility features like ramps, grab bars, and braille signage.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Geolocation Toggle</h3><p>Discover accessible venues within a customisable radius around your current location.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Admin Moderation</h3><p>Administrative dashboard for content moderation and community management.</p></div></div>
+    </div>
+  </section>
+</div>
+<!-- VENUES PAGE -->
+<div id="page-venues" class="page">
+  <div class="section">
+    <h1 class="section-title" style="margin-bottom:.5rem">Explore Venues</h1>
+    <p class="section-sub">Discover accessible venues rated by the community</p>
+    <div class="search-box" style="margin-bottom:1.5rem;max-width:100%">
+      <input type="text" placeholder="Search venues..." id="venueSearch" oninput="filterVenues()">
+      <button onclick="filterVenues()">Search</button>
+    </div>
+    <p style="font-size:.875rem;color:var(--muted-fg);margin-bottom:.5rem">Filter by accessibility:</p>
+    <div class="filters" id="tagFilters">
+      <button class="tag-filter tag-filter-mobility" onclick="toggleTagFilter('Mobility',this)">&#9855; Mobility</button>
+      <button class="tag-filter tag-filter-sensory" onclick="toggleTagFilter('Sensory',this)">&#128066; Sensory</button>
+      <button class="tag-filter tag-filter-visual" onclick="toggleTagFilter('Visual',this)">&#128065; Visual</button>
+    </div>
+    <div class="filters" id="catFilters"></div>
+    <p id="venueCount" style="font-size:.875rem;color:var(--muted-fg);margin-bottom:1rem"></p>
+    <div class="cards" id="venueCards"></div>
+    <div id="noResults" style="display:none;text-align:center;padding:3rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+      <p style="font-size:1.125rem;font-weight:600">No venues found</p>
+      <p style="font-size:.875rem;color:var(--muted-fg)">Try adjusting your search or filters</p>
+    </div>
+  </div>
+</div>
+<!-- DETAIL PAGE -->
+<div id="page-detail" class="page">
+  <div class="detail" id="detailContent"></div>
+</div>
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="about">
+    <h1>About AccessiBuild</h1>
+    <p>AccessiBuild is a community-driven platform that helps people discover, rate, and review venues based on their accessibility features. Our mission is to make every space welcoming and accessible to everyone.</p>
+    <h2>Functional Requirements</h2>
+    <p><span class="req-badge">FR1</span><strong>Venue Discovery &amp; Search</strong></p>
+    <ul>
+      <li>Users can search venues by name, category, or location</li>
+      <li>Categories include Caf&eacute;, Library, Entertainment, Gym, Museum, and Restaurant</li>
+      <li>Results update in real-time as users type</li>
+    </ul>
+    <p><span class="req-badge">FR2</span><strong>Accessibility Filtering</strong></p>
+    <ul>
+      <li>Three accessibility tags: Mobility, Sensory, and Visual</li>
+      <li>Users can filter by multiple tags simultaneously</li>
+      <li>Filters combine with search and category for precise results</li>
+    </ul>
+    <p><span class="req-badge">FR3</span><strong>Community Ratings &amp; Reviews</strong></p>
+    <ul>
+      <li>1&ndash;5 star accessibility rating system</li>
+      <li>Detailed text reviews with accessibility-specific tags</li>
+      <li>Review dates and user attribution</li>
+    </ul>
+    <p><span class="req-badge">FR4</span><strong>Multimedia Evidence</strong></p>
+    <ul>
+      <li>Venue images showing accessibility features</li>
+      <li>Photo upload capability for community contributions</li>
+    </ul>
+    <p><span class="req-badge">FR5</span><strong>Geolocation</strong></p>
+    <ul>
+      <li>Venue coordinates stored for mapping</li>
+      <li>Customisable radius search around user location</li>
+    </ul>
+    <h2>Technology</h2>
+    <p>This standalone version is built with pure HTML, CSS, and JavaScript &mdash; no frameworks or build tools required. Simply open the file in any modern browser.</p>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer class="footer">
+  <p>&copy; 2026 <strong>AccessiBuild</strong>. Making spaces accessible for everyone.</p>
+</footer>
+<script>
+// DATA
+var venues = [
+  {id:"1",name:"The Accessible Grounds Café",category:"Cafe",address:"12 High Street, London, EC1A 1BB",description:"A fully accessible café with step-free access, braille menus, and a quiet corner for sensory-sensitive visitors. Known for its inclusive atmosphere and welcoming staff.",accessibilityScore:4.7,reviewCount:124,tags:["Mobility","Sensory","Visual"],features:["Wheelchair Ramp","Braille Menu","Quiet Zone","Accessible Toilets","Hearing Loop"],image:"https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=80",reviews:[
+    {userName:"Sarah M.",rating:5,comment:"Brilliant café with excellent wheelchair access. The ramp is well-maintained and the staff are incredibly helpful.",tags:["Mobility"],date:"2026-01-15"},
+    {userName:"James T.",rating:4,comment:"Good braille menu available. The quiet zone is a great touch for those of us who need a calmer environment.",tags:["Visual","Sensory"],date:"2026-01-10"},
+    {userName:"Priya K.",rating:5,comment:"As a wheelchair user, this is my go-to café. Everything is at a reachable height and the aisles are wide.",tags:["Mobility"],date:"2025-12-28"}
+  ]},
+  {id:"2",name:"Central Public Library",category:"Library",address:"45 Queens Road, Manchester, M2 5DB",description:"A modern library with full accessibility features including elevator access to all floors, large print collections, and assistive technology stations.",accessibilityScore:4.9,reviewCount:89,tags:["Mobility","Visual"],features:["Elevator","Large Print Books","Screen Readers","Automatic Doors","Accessible Parking"],image:"https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80",reviews:[
+    {userName:"David L.",rating:5,comment:"The best accessible library I've visited. Screen readers at every station and staff trained in accessibility.",tags:["Visual"],date:"2026-02-01"},
+    {userName:"Emma W.",rating:5,comment:"Excellent elevator access and the automatic doors make entry effortless with my mobility scooter.",tags:["Mobility"],date:"2026-01-20"}
+  ]},
+  {id:"3",name:"Riverside Cinema",category:"Entertainment",address:"8 River Walk, Birmingham, B1 1RS",description:"An inclusive cinema experience with wheelchair-accessible seating, audio description headsets, and subtitled screenings throughout the week.",accessibilityScore:4.3,reviewCount:67,tags:["Mobility","Visual","Sensory"],features:["Wheelchair Spaces","Audio Description","Subtitled Screenings","Sensory Friendly Sessions","Accessible Toilets"],image:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&q=80",reviews:[
+    {userName:"Olivia R.",rating:4,comment:"Love the sensory-friendly screenings! Lower volume and softer lighting make all the difference for my autistic son.",tags:["Sensory"],date:"2026-01-25"},
+    {userName:"Marcus B.",rating:5,comment:"Audio description headsets work perfectly. Finally a cinema that caters properly to visually impaired visitors.",tags:["Visual"],date:"2026-01-18"}
+  ]},
+  {id:"4",name:"Green Park Fitness Centre",category:"Gym",address:"22 Park Lane, Leeds, LS1 3AD",description:"A fitness centre with adapted equipment, pool hoist, and trained accessibility staff. Offers inclusive fitness classes for all ability levels.",accessibilityScore:4.5,reviewCount:53,tags:["Mobility"],features:["Adapted Equipment","Pool Hoist","Changing Places Facility","Personal Accessibility Trainer","Step-Free Access"],image:"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80",reviews:[
+    {userName:"Tom H.",rating:4,comment:"Great adapted equipment and the pool hoist is easy to use independently. Staff are well-trained.",tags:["Mobility"],date:"2026-02-05"},
+    {userName:"Fatima A.",rating:5,comment:"The inclusive fitness classes are wonderful. I feel welcome and the instructors adapt exercises brilliantly.",tags:["Mobility"],date:"2026-01-30"}
+  ]},
+  {id:"5",name:"Heritage Museum",category:"Museum",address:"1 Museum Square, Edinburgh, EH1 1JF",description:"A museum committed to accessibility with tactile exhibits, BSL guided tours, and step-free access throughout all galleries.",accessibilityScore:4.6,reviewCount:112,tags:["Mobility","Sensory","Visual"],features:["Tactile Exhibits","BSL Tours","Step-Free Access","Quiet Hours","Large Print Guides"],image:"https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=600&q=80",reviews:[
+    {userName:"Helen C.",rating:5,comment:"The tactile exhibits are fantastic. Being able to touch replicas of artefacts makes the museum come alive.",tags:["Visual"],date:"2026-02-10"},
+    {userName:"Amir S.",rating:4,comment:"BSL tours are excellent. Really appreciate the museum investing in deaf accessibility.",tags:["Sensory"],date:"2026-02-03"}
+  ]},
+  {id:"6",name:"Harbour View Restaurant",category:"Restaurant",address:"15 Harbour Road, Bristol, BS1 4RW",description:"A waterfront restaurant with full step-free access, allergy-aware menus in multiple formats, and trained accessibility champions on every shift.",accessibilityScore:4.1,reviewCount:38,tags:["Mobility","Visual"],features:["Step-Free Entry","Braille Menu","Large Print Menu","Lowered Counter","Accessible Parking"],image:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80",reviews:[
+    {userName:"Lucy P.",rating:4,comment:"Lovely food and the braille menu is a nice touch. Would love to see a hearing loop installed too.",tags:["Visual"],date:"2026-01-22"},
+    {userName:"Robert D.",rating:4,comment:"Good wheelchair access and the lowered counter makes ordering much easier. Staff are attentive.",tags:["Mobility"],date:"2026-01-15"}
+  ]}
+];
+var categories = ["All","Cafe","Library","Entertainment","Gym","Museum","Restaurant"];
+var activeTags = [];
+var activeCategory = "All";
+// RENDER STARS
+function renderStars(score) {
+  var full = Math.floor(score);
+  var half = score % 1 >= 0.5 ? 1 : 0;
+  var empty = 5 - full - half;
+  return "&#9733;".repeat(full) + (half ? "&#9734;" : "") + "&#9734;".repeat(empty);
+}
+// RENDER CARD HTML
+function cardHTML(v) {
+  var tagHTML = v.tags.map(function(t) {
+    return '<span class="tag tag-' + t.toLowerCase() + '">' + t + '</span>';
+  }).join("");
+  return '<div class="card" onclick="showDetail(\'' + v.id + '\')">' +
+    '<img class="card-img" src="' + v.image + '" alt="' + v.name + '" onerror="this.style.background=\'var(--muted)\';this.alt=\'Image unavailable\'">' +
+    '<div class="card-body">' +
+    '<div class="card-cat">' + v.category + '</div>' +
+    '<div class="card-name">' + v.name + '</div>' +
+    '<div class="card-addr">' + v.address + '</div>' +
+    '<div class="tags" style="margin:0 0 .75rem 0">' + tagHTML + '</div>' +
+    '<div class="card-footer">' +
+    '<div class="card-score"><span style="color:var(--accent)">&#9733;</span> ' + v.accessibilityScore + '</div>' +
+    '<div class="card-reviews">' + v.reviewCount + ' reviews</div>' +
+    '</div></div></div>';
+}
+// SHOW PAGE
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
+  document.getElementById("page-" + id).classList.add("active");
+  document.querySelectorAll(".nav-links a").forEach(function(a) { a.classList.remove("active"); });
+  var navEl = document.getElementById("nav-" + id);
+  if (navEl) navEl.classList.add("active");
+  document.getElementById("navLinks").classList.remove("open");
+  window.scrollTo(0, 0);
+  if (id === "venues") { filterVenues(); }
+}
+// FEATURED
+function renderFeatured() {
+  var html = "";
+  for (var i = 0; i < 3; i++) html += cardHTML(venues[i]);
+  document.getElementById("featuredCards").innerHTML = html;
+}
+// CATEGORY FILTERS
+function renderCatFilters() {
+  var html = "";
+  categories.forEach(function(c) {
+    html += '<button class="filter-btn' + (activeCategory === c ? " active" : "") + '" onclick="setCat(\'' + c + '\')">' + c + '</button>';
+  });
+  document.getElementById("catFilters").innerHTML = html;
+}
+function setCat(c) {
+  activeCategory = c;
+  renderCatFilters();
+  filterVenues();
+}
+function toggleTagFilter(tag, el) {
+  var idx = activeTags.indexOf(tag);
+  if (idx > -1) { activeTags.splice(idx, 1); el.classList.remove("active"); }
+  else { activeTags.push(tag); el.classList.add("active"); }
+  filterVenues();
+}
+function filterVenues() {
+  var q = document.getElementById("venueSearch").value.toLowerCase();
+  var results = venues.filter(function(v) {
+    var matchSearch = !q || v.name.toLowerCase().indexOf(q) > -1 || v.category.toLowerCase().indexOf(q) > -1 || v.address.toLowerCase().indexOf(q) > -1;
+    var matchCat = activeCategory === "All" || v.category === activeCategory;
+    var matchTags = activeTags.length === 0 || activeTags.every(function(t) { return v.tags.indexOf(t) > -1; });
+    return matchSearch && matchCat && matchTags;
+  });
+  document.getElementById("venueCount").textContent = results.length + " venue" + (results.length !== 1 ? "s" : "") + " found";
+  if (results.length > 0) {
+    document.getElementById("venueCards").innerHTML = results.map(cardHTML).join("");
+    document.getElementById("venueCards").style.display = "";
+    document.getElementById("noResults").style.display = "none";
+  } else {
+    document.getElementById("venueCards").style.display = "none";
+    document.getElementById("noResults").style.display = "block";
+  }
+}
+// DETAIL
+function showDetail(id) {
+  var v = venues.find(function(x) { return x.id === id; });
+  if (!v) return;
+  var featHTML = v.features.map(function(f) { return '<span class="detail-feat">' + f + '</span>'; }).join("");
+  var tagHTML = v.tags.map(function(t) { return '<span class="tag tag-' + t.toLowerCase() + '">' + t + '</span>'; }).join("");
+  var reviewsHTML = v.reviews.map(function(r) {
+    var rTags = r.tags.map(function(t) { return '<span class="tag tag-' + t.toLowerCase() + '" style="font-size:.625rem;padding:.2rem .5rem">' + t + '</span>'; }).join("");
+    return '<div class="review">' +
+      '<div class="review-header"><span class="review-user">' + r.userName + '</span><span class="review-date">' + r.date + '</span></div>' +
+      '<div class="review-stars">' + "&#9733;".repeat(r.rating) + "&#9734;".repeat(5 - r.rating) + '</div>' +
+      '<p class="review-text">' + r.comment + '</p>' +
+      '<div class="tags" style="margin-top:.5rem">' + rTags + '</div></div>';
+  }).join("");
+  document.getElementById("detailContent").innerHTML =
+    '<a href="#" class="back-btn" onclick="showPage(\'venues\')">&larr; Back to Venues</a>' +
+    '<img class="detail-img" src="' + v.image + '" alt="' + v.name + '" onerror="this.style.background=\'var(--muted)\'">' +
+    '<div class="detail-cat">' + v.category + '</div>' +
+    '<h1>' + v.name + '</h1>' +
+    '<p class="detail-addr">' + v.address + '</p>' +
+    '<div class="detail-score"><span class="stars">' + renderStars(v.accessibilityScore) + '</span><span class="num">' + v.accessibilityScore + '</span><span class="count">(' + v.reviewCount + ' reviews)</span></div>' +
+    '<div class="tags" style="margin-bottom:1.5rem">' + tagHTML + '</div>' +
+    '<p class="detail-desc">' + v.description + '</p>' +
+    '<h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem">Accessibility Features</h2>' +
+    '<div class="detail-features">' + featHTML + '</div>' +
+    '<h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem">Community Reviews</h2>' +
+    reviewsHTML;
+  showPage("detail");
+}
+// HERO SEARCH
+function heroSearchGo() {
+  var q = document.getElementById("heroSearch").value;
+  document.getElementById("venueSearch").value = q;
+  showPage("venues");
+}
+// INIT
+renderFeatured();
+renderCatFilters();
+</script>
+</body>
+</html>
