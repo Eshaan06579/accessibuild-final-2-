@@ -1,0 +1,282 @@
+// DATA
+var venues = [];
+var venuesFallback = [
+  {
+    "id": "1",
+    "name": "The Accessible Grounds Café",
+    "category": "Cafe",
+    "address": "12 High Street, London, EC1A 1BB",
+    "description": "A fully accessible café with step-free access, braille menus, and a quiet corner for sensory-sensitive visitors. Known for its inclusive atmosphere and welcoming staff.",
+    "accessibilityScore": 4.7,
+    "reviewCount": 124,
+    "tags": ["Mobility", "Sensory", "Visual"],
+    "features": ["Wheelchair Ramp", "Braille Menu", "Quiet Zone", "Accessible Toilets", "Hearing Loop"],
+    "image": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=80",
+    "reviews": [
+      {"userName": "Sarah M.", "rating": 5, "comment": "Brilliant café with excellent wheelchair access. The ramp is well-maintained and the staff are incredibly helpful.", "tags": ["Mobility"], "date": "2026-01-15"},
+      {"userName": "James T.", "rating": 4, "comment": "Good braille menu available. The quiet zone is a great touch for those of us who need a calmer environment.", "tags": ["Visual", "Sensory"], "date": "2026-01-10"},
+      {"userName": "Priya K.", "rating": 5, "comment": "As a wheelchair user, this is my go-to café. Everything is at a reachable height and the aisles are wide.", "tags": ["Mobility"], "date": "2025-12-28"}
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Central Public Library",
+    "category": "Library",
+    "address": "45 Queens Road, Manchester, M2 5DB",
+    "description": "A modern library with full accessibility features including elevator access to all floors, large print collections, and assistive technology stations.",
+    "accessibilityScore": 4.9,
+    "reviewCount": 89,
+    "tags": ["Mobility", "Visual"],
+    "features": ["Elevator", "Large Print Books", "Screen Readers", "Automatic Doors", "Accessible Parking"],
+    "image": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80",
+    "reviews": [
+      {"userName": "David L.", "rating": 5, "comment": "The best accessible library I've visited. Screen readers at every station and staff trained in accessibility.", "tags": ["Visual"], "date": "2026-02-01"},
+      {"userName": "Emma W.", "rating": 5, "comment": "Excellent elevator access and the automatic doors make entry effortless with my mobility scooter.", "tags": ["Mobility"], "date": "2026-01-20"}
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Riverside Cinema",
+    "category": "Entertainment",
+    "address": "8 River Walk, Birmingham, B1 1RS",
+    "description": "An inclusive cinema experience with wheelchair-accessible seating, audio description headsets, and subtitled screenings throughout the week.",
+    "accessibilityScore": 4.3,
+    "reviewCount": 67,
+    "tags": ["Mobility", "Visual", "Sensory"],
+    "features": ["Wheelchair Spaces", "Audio Description", "Subtitled Screenings", "Sensory Friendly Sessions", "Accessible Toilets"],
+    "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&q=80",
+    "reviews": [
+      {"userName": "Olivia R.", "rating": 4, "comment": "Love the sensory-friendly screenings! Lower volume and softer lighting make all the difference for my autistic son.", "tags": ["Sensory"], "date": "2026-01-25"},
+      {"userName": "Marcus B.", "rating": 5, "comment": "Audio description headsets work perfectly. Finally a cinema that caters properly to visually impaired visitors.", "tags": ["Visual"], "date": "2026-01-18"}
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Green Park Fitness Centre",
+    "category": "Gym",
+    "address": "22 Park Lane, Leeds, LS1 3AD",
+    "description": "A fitness centre with adapted equipment, pool hoist, and trained accessibility staff. Offers inclusive fitness classes for all ability levels.",
+    "accessibilityScore": 4.5,
+    "reviewCount": 53,
+    "tags": ["Mobility"],
+    "features": ["Adapted Equipment", "Pool Hoist", "Changing Places Facility", "Personal Accessibility Trainer", "Step-Free Access"],
+    "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80",
+    "reviews": [
+      {"userName": "Tom H.", "rating": 4, "comment": "Great adapted equipment and the pool hoist is easy to use independently. Staff are well-trained.", "tags": ["Mobility"], "date": "2026-02-05"},
+      {"userName": "Fatima A.", "rating": 5, "comment": "The inclusive fitness classes are wonderful. I feel welcome and the instructors adapt exercises brilliantly.", "tags": ["Mobility"], "date": "2026-01-30"}
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Heritage Museum",
+    "category": "Museum",
+    "address": "1 Museum Square, Edinburgh, EH1 1JF",
+    "description": "A museum committed to accessibility with tactile exhibits, BSL guided tours, and step-free access throughout all galleries.",
+    "accessibilityScore": 4.6,
+    "reviewCount": 112,
+    "tags": ["Mobility", "Sensory", "Visual"],
+    "features": ["Tactile Exhibits", "BSL Tours", "Step-Free Access", "Quiet Hours", "Large Print Guides"],
+    "image": "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=600&q=80",
+    "reviews": [
+      {"userName": "Helen C.", "rating": 5, "comment": "The tactile exhibits are fantastic. Being able to touch replicas of artefacts makes the museum come alive.", "tags": ["Visual"], "date": "2026-02-10"},
+      {"userName": "Amir S.", "rating": 4, "comment": "BSL tours are excellent. Really appreciate the museum investing in deaf accessibility.", "tags": ["Sensory"], "date": "2026-02-03"}
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Harbour View Restaurant",
+    "category": "Restaurant",
+    "address": "15 Harbour Road, Bristol, BS1 4RW",
+    "description": "A waterfront restaurant with full step-free access, allergy-aware menus in multiple formats, and trained accessibility champions on every shift.",
+    "accessibilityScore": 4.1,
+    "reviewCount": 38,
+    "tags": ["Mobility", "Visual"],
+    "features": ["Step-Free Entry", "Braille Menu", "Large Print Menu", "Lowered Counter", "Accessible Parking"],
+    "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80",
+    "reviews": [
+      {"userName": "Lucy P.", "rating": 4, "comment": "Lovely food and the braille menu is a nice touch. Would love to see a hearing loop installed too.", "tags": ["Visual"], "date": "2026-01-22"},
+      {"userName": "Robert D.", "rating": 4, "comment": "Good wheelchair access and the lowered counter makes ordering much easier. Staff are attentive.", "tags": ["Mobility"], "date": "2026-01-15"}
+    ]
+  }
+];
+var categories = ["All","Cafe","Library","Entertainment","Gym","Museum","Restaurant"];
+var activeTags = [];
+var activeCategory = "All";
+
+function loadVenues() {
+  return fetch('venues.json')
+    .then(function(response) {
+      if (!response.ok) throw new Error('Failed to load venues.json: ' + response.statusText);
+      return response.json();
+    })
+    .then(function(data) {
+      venues = data;
+    })
+    .catch(function(error) {
+      // Fallback for file:// local use where fetch is blocked in some browsers
+      console.warn('Fetch venues.json failed, trying XHR fallback:', error);
+      return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.overrideMimeType('application/json');
+        xhr.open('GET', 'venues.json', true);
+        xhr.onload = function() {
+          if (xhr.status === 200 || xhr.status === 0) {
+            try {
+              venues = JSON.parse(xhr.responseText);
+              resolve();
+            } catch (parseError) {
+              reject(parseError);
+            }
+          } else {
+            reject(new Error('XHR failed with status ' + xhr.status));
+          }
+        };
+        xhr.onerror = function() {
+          reject(new Error('XHR network error'));
+        };
+        xhr.send();
+      });
+    });
+}
+
+function initApp() {
+  renderFeatured();
+  renderCatFilters();
+}
+
+// load data and init
+loadVenues().then(initApp).catch(function(error) {
+  console.warn('venues.json load failed, falling back to embedded data:', error);
+  if (venuesFallback && venuesFallback.length > 0) {
+    venues = venuesFallback;
+    initApp();
+    return;
+  }
+  console.error(error);
+  document.getElementById('featuredCards').innerHTML = '<p style="color:red;padding:1rem;">Could not load venue data.</p>';
+  document.getElementById('venueCards').innerHTML = '<p style="color:red;padding:1rem;">Could not load venue data.</p>';
+  document.getElementById('venueCount').textContent = '0 venues found';
+  document.getElementById('noResults').style.display = 'block';
+});
+// RENDER STARS
+function renderStars(score) {
+  var full = Math.floor(score);
+  var half = score % 1 >= 0.5 ? 1 : 0;
+  var empty = 5 - full - half;
+  return "&#9733;".repeat(full) + (half ? "&#9734;" : "") + "&#9734;".repeat(empty);
+}
+// RENDER CARD HTML
+function cardHTML(v) {
+  var tagHTML = v.tags.map(function(t) {
+    return '<span class="tag tag-' + t.toLowerCase() + '">' + t + '</span>';
+  }).join("");
+  return '<div class="card" onclick="showDetail(\'' + v.id + '\')">' +
+    '<img class="card-img" src="' + v.image + '" alt="' + v.name + '" onerror="this.style.background=\'var(--muted)\';this.alt=\'Image unavailable\'">' +
+    '<div class="card-body">' +
+    '<div class="card-cat">' + v.category + '</div>' +
+    '<div class="card-name">' + v.name + '</div>' +
+    '<div class="card-addr">' + v.address + '</div>' +
+    '<div class="tags card-tags-inline">' + tagHTML + '</div>' +
+    '<div class="card-footer">' +
+    '<div class="card-score"><span>&#9733;</span> ' + v.accessibilityScore + '</div>' +
+    '<div class="card-reviews">' + v.reviewCount + ' reviews</div>' +
+    '</div></div></div>';
+}
+// SHOW PAGE
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
+  document.getElementById("page-" + id).classList.add("active");
+  document.querySelectorAll(".nav-links a").forEach(function(a) { a.classList.remove("active"); });
+  var navEl = document.getElementById("nav-" + id);
+  if (navEl) navEl.classList.add("active");
+  document.getElementById("navLinks").classList.remove("open");
+  window.scrollTo(0, 0);
+  if (id === "venues") { filterVenues(); }
+}
+// FEATURED
+function renderFeatured() {
+  if (!venues || venues.length === 0) {
+    document.getElementById("featuredCards").innerHTML = "";
+    return;
+  }
+  var html = "";
+  for (var i = 0; i < 3 && i < venues.length; i++) {
+    html += cardHTML(venues[i]);
+  }
+  document.getElementById("featuredCards").innerHTML = html;
+}
+// CATEGORY FILTERS
+function renderCatFilters() {
+  var html = "";
+  categories.forEach(function(c) {
+    html += '<button class="filter-btn' + (activeCategory === c ? " active" : "") + '" onclick="setCat(\'' + c + '\')">' + c + '</button>';
+  });
+  document.getElementById("catFilters").innerHTML = html;
+}
+function setCat(c) {
+  activeCategory = c;
+  renderCatFilters();
+  filterVenues();
+}
+function toggleTagFilter(tag, el) {
+  var idx = activeTags.indexOf(tag);
+  if (idx > -1) { activeTags.splice(idx, 1); el.classList.remove("active"); }
+  else { activeTags.push(tag); el.classList.add("active"); }
+  filterVenues();
+}
+function filterVenues() {
+  var q = document.getElementById("venueSearch").value.toLowerCase();
+  var results = venues.filter(function(v) {
+    var matchSearch = !q || v.name.toLowerCase().indexOf(q) > -1 || v.category.toLowerCase().indexOf(q) > -1 || v.address.toLowerCase().indexOf(q) > -1;
+    var matchCat = activeCategory === "All" || v.category === activeCategory;
+    var matchTags = activeTags.length === 0 || activeTags.every(function(t) { return v.tags.indexOf(t) > -1; });
+    return matchSearch && matchCat && matchTags;
+  });
+  document.getElementById("venueCount").textContent = results.length + " venue" + (results.length !== 1 ? "s" : "") + " found";
+  if (results.length > 0) {
+    document.getElementById("venueCards").innerHTML = results.map(cardHTML).join("");
+    document.getElementById("venueCards").style.display = "";
+    document.getElementById("noResults").style.display = "none";
+  } else {
+    document.getElementById("venueCards").style.display = "none";
+    document.getElementById("noResults").style.display = "block";
+  }
+}
+// DETAIL
+function showDetail(id) {
+  var v = venues.find(function(x) { return x.id === id; });
+  if (!v) return;
+  var featHTML = v.features.map(function(f) { return '<span class="detail-feat">' + f + '</span>'; }).join("");
+  var tagHTML = v.tags.map(function(t) { return '<span class="tag tag-' + t.toLowerCase() + '">' + t + '</span>'; }).join("");
+  var reviewsHTML = v.reviews.map(function(r) {
+    var rTags = r.tags.map(function(t) { return '<span class="tag tag-' + t.toLowerCase() + ' tag-review">' + t + '</span>'; }).join("");
+    return '<div class="review">' +
+      '<div class="review-header"><span class="review-user">' + r.userName + '</span><span class="review-date">' + r.date + '</span></div>' +
+      '<div class="review-stars">' + "&#9733;".repeat(r.rating) + "&#9734;".repeat(5 - r.rating) + '</div>' +
+      '<p class="review-text">' + r.comment + '</p>' +
+      '<div class="tags tags-margin-top">' + rTags + '</div></div>';
+  }).join("");
+  document.getElementById("detailContent").innerHTML =
+    '<a href="#" class="back-btn" onclick="showPage(\'venues\')">&larr; Back to Venues</a>' +
+    '<img class="detail-img" src="' + v.image + '" alt="' + v.name + '" onerror="this.style.background=\'var(--muted)\'">' +
+    '<div class="detail-cat">' + v.category + '</div>' +
+    '<h1>' + v.name + '</h1>' +
+    '<p class="detail-addr">' + v.address + '</p>' +
+    '<div class="detail-score"><span class="stars">' + renderStars(v.accessibilityScore) + '</span><span class="num">' + v.accessibilityScore + '</span><span class="count">(' + v.reviewCount + ' reviews)</span></div>' +
+    '<div class="tags tags-margin-bottom-medium">' + tagHTML + '</div>' +
+    '<p class="detail-desc">' + v.description + '</p>' +
+    '<h2 class="section-heading-large">Accessibility Features</h2>' +
+    '<div class="detail-features">' + featHTML + '</div>' +
+    '<h2 class="section-heading-large">Community Reviews</h2>' +
+    reviewsHTML;
+  showPage("detail");
+}
+// HERO SEARCH
+function heroSearchGo() {
+  var q = document.getElementById("heroSearch").value;
+  document.getElementById("venueSearch").value = q;
+  showPage("venues");
+}
+// INIT
+// renderFeatured() and renderCatFilters() are called from initApp() after venues are loaded
+
