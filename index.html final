@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AccessiBuild - Accessible Venue Finder</title>
+<meta name="description" content="Find, rate, and review venues based on real accessibility features.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="showPage('home')">Accessi<span>Build</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="#" class="active" onclick="showPage('home')" id="nav-home">Home</a>
+      <a href="#" onclick="showPage('venues')" id="nav-venues">Venues</a>
+      <a href="#" onclick="showPage('about')" id="nav-about">About</a>
+    </div>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">&#9776;</button>
+  </div>
+</nav>
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">&#9855; Discover Accessible Venues</div>
+      <h1>Every space should be <span>welcome to everyone.</span></h1>
+      <p>Find, rate, and review venues based on real accessibility features. Powered by our community of users who care about inclusion.</p>
+      <div class="search-box">
+        <input type="text" placeholder="Search venues, categories, locations..." id="heroSearch">
+        <button onclick="heroSearchGo()">Search</button>
+      </div>
+      <div class="tags">
+        <span class="tag tag-mobility">&#9855; Mobility</span>
+        <span class="tag tag-sensory">&#128066; Sensory</span>
+        <span class="tag tag-visual">&#128065; Visual</span>
+      </div>
+    </div>
+  </section>
+  <section class="stats">
+    <div class="stats-inner">
+      <div><div class="stat-val">500+</div><div class="stat-label">Venues Listed</div></div>
+      <div><div class="stat-val">4.5</div><div class="stat-label">Avg. Rating</div></div>
+      <div><div class="stat-val">2,000+</div><div class="stat-label">Community Reviews</div></div>
+      <div><div class="stat-val">3</div><div class="stat-label">Accessibility Tags</div></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-center">
+      <h2 class="section-title">How AccessiBuild Works</h2>
+      <p class="section-sub">Three simple steps to find accessible venues near you</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3>Search &amp; Filter</h3><p>Search by name, category, or location. Filter by Mobility, Sensory, or Visual accessibility tags.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Read Reviews</h3><p>See real community ratings and detailed reviews from people with lived accessibility experience.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Rate &amp; Share</h3><p>Submit your own accessibility score, write reviews, and upload photos of accessibility features.</p></div>
+    </div>
+  </section>
+  <section class="section-alt">
+    <div class="section">
+      <div class="section-flex-between">
+        <div>
+          <h2 class="section-title">Featured Venues</h2>
+          <p class="section-sub section-sub-no-margin">Top-rated accessible places in the community</p>
+        </div>
+        <a href="#" onclick="showPage('venues')" class="link-view-all">View all &rarr;</a>
+      </div>
+      <div class="cards" id="featuredCards"></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-center">
+      <h2 class="section-title">Platform Features</h2>
+      <p class="section-sub">Built with accessibility and inclusion at its core</p>
+    </div>
+    <div class="features">
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Venue Discovery &amp; Search</h3><p>Search by name, category (Caf&eacute;, Library, Gym), or specific location with geolocation support.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Granular Accessibility Filtering</h3><p>Filter venues by Mobility, Sensory, and Visual accessibility tags to find exactly what you need.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Community Ratings &amp; Reviews</h3><p>1&ndash;5 star accessibility scores with detailed text reviews and specific accessibility tags.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Multimedia Evidence</h3><p>Upload photos of accessibility features like ramps, grab bars, and braille signage.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Geolocation Toggle</h3><p>Discover accessible venues within a customisable radius around your current location.</p></div></div>
+      <div class="feature"><div class="feature-icon">&#10004;</div><div><h3>Admin Moderation</h3><p>Administrative dashboard for content moderation and community management.</p></div></div>
+    </div>
+  </section>
+</div>
+<!-- VENUES PAGE -->
+<div id="page-venues" class="page">
+  <div class="section">
+    <h1 class="section-title venue-heading">Explore Venues</h1>
+    <p class="section-sub">Discover accessible venues rated by the community</p>
+    <div class="search-box search-box-venue">
+      <input type="text" placeholder="Search venues..." id="venueSearch" oninput="filterVenues()">
+      <button onclick="filterVenues()">Search</button>
+    </div>
+    <p class="venue-filter-note">Filter by accessibility:</p>
+    <div class="filters" id="tagFilters">
+      <button class="tag-filter tag-filter-mobility" onclick="toggleTagFilter('Mobility',this)">&#9855; Mobility</button>
+      <button class="tag-filter tag-filter-sensory" onclick="toggleTagFilter('Sensory',this)">&#128066; Sensory</button>
+      <button class="tag-filter tag-filter-visual" onclick="toggleTagFilter('Visual',this)">&#128065; Visual</button>
+    </div>
+    <div class="filters" id="catFilters"></div>
+    <p id="venueCount" class="venue-count"></p>
+    <div class="cards" id="venueCards"></div>
+    <div id="noResults" class="no-results-box">
+      <p class="no-results-title">No venues found</p>
+      <p class="no-results-message">Try adjusting your search or filters</p>
+    </div>
+  </div>
+</div>
+<!-- DETAIL PAGE -->
+<div id="page-detail" class="page">
+  <div class="detail" id="detailContent"></div>
+</div>
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="about">
+    <h1>About AccessiBuild</h1>
+    <p>AccessiBuild is a community-driven platform that helps people discover, rate, and review venues based on their accessibility features. Our mission is to make every space welcoming and accessible to everyone.</p>
+    <h2>Functional Requirements</h2>
+    <p><span class="req-badge">FR1</span><strong>Venue Discovery &amp; Search</strong></p>
+    <ul>
+      <li>Users can search venues by name, category, or location</li>
+      <li>Categories include Caf&eacute;, Library, Entertainment, Gym, Museum, and Restaurant</li>
+      <li>Results update in real-time as users type</li>
+    </ul>
+    <p><span class="req-badge">FR2</span><strong>Accessibility Filtering</strong></p>
+    <ul>
+      <li>Three accessibility tags: Mobility, Sensory, and Visual</li>
+      <li>Users can filter by multiple tags simultaneously</li>
+      <li>Filters combine with search and category for precise results</li>
+    </ul>
+    <p><span class="req-badge">FR3</span><strong>Community Ratings &amp; Reviews</strong></p>
+    <ul>
+      <li>1&ndash;5 star accessibility rating system</li>
+      <li>Detailed text reviews with accessibility-specific tags</li>
+      <li>Review dates and user attribution</li>
+    </ul>
+    <p><span class="req-badge">FR4</span><strong>Multimedia Evidence</strong></p>
+    <ul>
+      <li>Venue images showing accessibility features</li>
+      <li>Photo upload capability for community contributions</li>
+    </ul>
+    <p><span class="req-badge">FR5</span><strong>Geolocation</strong></p>
+    <ul>
+      <li>Venue coordinates stored for mapping</li>
+      <li>Customisable radius search around user location</li>
+    </ul>
+    <h2>Technology</h2>
+    <p>This standalone version is built with pure HTML, CSS, and JavaScript &mdash; no frameworks or build tools required. Simply open the file in any modern browser.</p>
+  </div>
+</div>
+<!-- FOOTER -->
+<footer class="footer">
+  <p>&copy; 2026 <strong>AccessiBuild</strong>. Making spaces accessible for everyone.</p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
