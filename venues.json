@@ -1,0 +1,99 @@
+[
+  {
+    "id": "1",
+    "name": "The Accessible Grounds Café",
+    "category": "Cafe",
+    "address": "12 High Street, London, EC1A 1BB",
+    "description": "A fully accessible café with step-free access, braille menus, and a quiet corner for sensory-sensitive visitors. Known for its inclusive atmosphere and welcoming staff.",
+    "accessibilityScore": 4.7,
+    "reviewCount": 124,
+    "tags": ["Mobility", "Sensory", "Visual"],
+    "features": ["Wheelchair Ramp", "Braille Menu", "Quiet Zone", "Accessible Toilets", "Hearing Loop"],
+    "image": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=80",
+    "reviews": [
+      {"userName": "Sarah M.", "rating": 5, "comment": "Brilliant café with excellent wheelchair access. The ramp is well-maintained and the staff are incredibly helpful.", "tags": ["Mobility"], "date": "2026-01-15"},
+      {"userName": "James T.", "rating": 4, "comment": "Good braille menu available. The quiet zone is a great touch for those of us who need a calmer environment.", "tags": ["Visual", "Sensory"], "date": "2026-01-10"},
+      {"userName": "Priya K.", "rating": 5, "comment": "As a wheelchair user, this is my go-to café. Everything is at a reachable height and the aisles are wide.", "tags": ["Mobility"], "date": "2025-12-28"}
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Central Public Library",
+    "category": "Library",
+    "address": "45 Queens Road, Manchester, M2 5DB",
+    "description": "A modern library with full accessibility features including elevator access to all floors, large print collections, and assistive technology stations.",
+    "accessibilityScore": 4.9,
+    "reviewCount": 89,
+    "tags": ["Mobility", "Visual"],
+    "features": ["Elevator", "Large Print Books", "Screen Readers", "Automatic Doors", "Accessible Parking"],
+    "image": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80",
+    "reviews": [
+      {"userName": "David L.", "rating": 5, "comment": "The best accessible library I've visited. Screen readers at every station and staff trained in accessibility.", "tags": ["Visual"], "date": "2026-02-01"},
+      {"userName": "Emma W.", "rating": 5, "comment": "Excellent elevator access and the automatic doors make entry effortless with my mobility scooter.", "tags": ["Mobility"], "date": "2026-01-20"}
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Riverside Cinema",
+    "category": "Entertainment",
+    "address": "8 River Walk, Birmingham, B1 1RS",
+    "description": "An inclusive cinema experience with wheelchair-accessible seating, audio description headsets, and subtitled screenings throughout the week.",
+    "accessibilityScore": 4.3,
+    "reviewCount": 67,
+    "tags": ["Mobility", "Visual", "Sensory"],
+    "features": ["Wheelchair Spaces", "Audio Description", "Subtitled Screenings", "Sensory Friendly Sessions", "Accessible Toilets"],
+    "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&q=80",
+    "reviews": [
+      {"userName": "Olivia R.", "rating": 4, "comment": "Love the sensory-friendly screenings! Lower volume and softer lighting make all the difference for my autistic son.", "tags": ["Sensory"], "date": "2026-01-25"},
+      {"userName": "Marcus B.", "rating": 5, "comment": "Audio description headsets work perfectly. Finally a cinema that caters properly to visually impaired visitors.", "tags": ["Visual"], "date": "2026-01-18"}
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Green Park Fitness Centre",
+    "category": "Gym",
+    "address": "22 Park Lane, Leeds, LS1 3AD",
+    "description": "A fitness centre with adapted equipment, pool hoist, and trained accessibility staff. Offers inclusive fitness classes for all ability levels.",
+    "accessibilityScore": 4.5,
+    "reviewCount": 53,
+    "tags": ["Mobility"],
+    "features": ["Adapted Equipment", "Pool Hoist", "Changing Places Facility", "Personal Accessibility Trainer", "Step-Free Access"],
+    "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80",
+    "reviews": [
+      {"userName": "Tom H.", "rating": 4, "comment": "Great adapted equipment and the pool hoist is easy to use independently. Staff are well-trained.", "tags": ["Mobility"], "date": "2026-02-05"},
+      {"userName": "Fatima A.", "rating": 5, "comment": "The inclusive fitness classes are wonderful. I feel welcome and the instructors adapt exercises brilliantly.", "tags": ["Mobility"], "date": "2026-01-30"}
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Heritage Museum",
+    "category": "Museum",
+    "address": "1 Museum Square, Edinburgh, EH1 1JF",
+    "description": "A museum committed to accessibility with tactile exhibits, BSL guided tours, and step-free access throughout all galleries.",
+    "accessibilityScore": 4.6,
+    "reviewCount": 112,
+    "tags": ["Mobility", "Sensory", "Visual"],
+    "features": ["Tactile Exhibits", "BSL Tours", "Step-Free Access", "Quiet Hours", "Large Print Guides"],
+    "image": "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?w=600&q=80",
+    "reviews": [
+      {"userName": "Helen C.", "rating": 5, "comment": "The tactile exhibits are fantastic. Being able to touch replicas of artefacts makes the museum come alive.", "tags": ["Visual"], "date": "2026-02-10"},
+      {"userName": "Amir S.", "rating": 4, "comment": "BSL tours are excellent. Really appreciate the museum investing in deaf accessibility.", "tags": ["Sensory"], "date": "2026-02-03"}
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Harbour View Restaurant",
+    "category": "Restaurant",
+    "address": "15 Harbour Road, Bristol, BS1 4RW",
+    "description": "A waterfront restaurant with full step-free access, allergy-aware menus in multiple formats, and trained accessibility champions on every shift.",
+    "accessibilityScore": 4.1,
+    "reviewCount": 38,
+    "tags": ["Mobility", "Visual"],
+    "features": ["Step-Free Entry", "Braille Menu", "Large Print Menu", "Lowered Counter", "Accessible Parking"],
+    "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80",
+    "reviews": [
+      {"userName": "Lucy P.", "rating": 4, "comment": "Lovely food and the braille menu is a nice touch. Would love to see a hearing loop installed too.", "tags": ["Visual"], "date": "2026-01-22"},
+      {"userName": "Robert D.", "rating": 4, "comment": "Good wheelchair access and the lowered counter makes ordering much easier. Staff are attentive.", "tags": ["Mobility"], "date": "2026-01-15"}
+    ]
+  }
+]
